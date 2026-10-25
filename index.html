@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0909">
+<style>
+html{-webkit-text-size-adjust:100%}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Путь Вэньпэя</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Russo+One&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+/* Layout: чёрный лак и кровавый красный, как доспех самурая. Шапка с яростным медведем, печати-ханко, полоса дней, карта + точки, красная полоса «дальше» */
+:root{
+  --bg:#0A0909; --surface:#141213; --surface2:#1D1A1B; --ink:#F1ECE4; --muted:#A39B93; --line:#2D2728;
+  --red:#D81E1E; --red-deep:#5E0B0B; --gold:#D6A84A; --moss:#93A887; --bone:#E9E0CF; --onlight:#0A0909; --onred:#FFFFFF;
+  --f-display:"Oswald","Arial Narrow","Impact",system-ui,sans-serif;
+  --f-voice:"Russo One","Arial Black",system-ui,sans-serif;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 110px;
+  background-image:radial-gradient(1200px 500px at 85% -10%, rgba(216,30,30,.16), transparent 60%)}
+.wrap{max-width:1120px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+
+/* hero */
+.hero{position:relative;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;padding-block:36px 24px;isolation:isolate;overflow:hidden}
+.hero::before{content:"侍";position:absolute;right:0;top:-10px;font-size:clamp(160px,28vw,320px);line-height:1;font-weight:900;color:var(--red);opacity:.10;z-index:-1;pointer-events:none;font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif}
+.slash{position:absolute;left:-40px;right:-40px;top:60%;height:2px;background:linear-gradient(90deg,transparent,var(--red) 20%,var(--red) 70%,transparent);transform:rotate(-7deg);opacity:.5;z-index:-1}
+.bear{width:190px;height:auto;flex:none;filter:drop-shadow(0 10px 24px rgba(216,30,30,.35))}
+.hero-text{min-width:0;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-family:var(--f-display);font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--red);font-weight:700}
+.hero h1{font-size:clamp(34px,6.4vw,72px);line-height:.98;text-transform:uppercase;letter-spacing:.01em;font-weight:700}
+.hero h1 .brush{position:relative;display:inline-block;color:var(--onred);padding:0 .12em;isolation:isolate}
+.hero h1 .brush::before{content:"";position:absolute;inset:.06em -.06em 0;background:var(--red);z-index:-1;
+  clip-path:polygon(0 18%,6% 4%,40% 10%,72% 0,100% 12%,97% 52%,100% 90%,66% 100%,30% 92%,3% 100%,1% 60%)}
+.bubble{position:relative;background:var(--surface);border-left:6px solid var(--red);padding:12px 16px;font-family:var(--f-voice);font-size:17px;line-height:1.4;max-width:640px}
+.bubble .who{display:block;font-family:var(--f-display);font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:4px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:var(--surface);
+  padding:9px 16px;font-family:var(--f-display);font-size:14px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;cursor:pointer;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--red)}
+.btn.primary{background:var(--red);border-color:var(--red);color:var(--onred);font-weight:700}
+
+/* overview */
+.overview{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;margin-block:8px 28px}
+.panel{background:var(--surface);border:1px solid var(--line);padding:16px}
+.ov-map svg{width:100%;height:auto;display:block}
+.legs{display:flex;flex-direction:column}
+.leg{display:grid;grid-template-columns:84px 1fr auto;gap:2px 10px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line)}
+.leg b{font-family:var(--f-display);font-size:17px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.leg .dates{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.leg .n{font-size:13px;color:var(--red);font-weight:600;white-space:nowrap}
+.leg .h{grid-column:2 / 4;font-size:13px;min-width:0}
+.leg .h a{color:var(--gold);text-decoration:none}
+.ov-sub{font-size:13px;color:var(--muted);margin-top:8px}
+
+/* tabs */
+.tabs-wrap{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:6px 8px;border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 6px;scrollbar-width:thin}
+.tab{flex:none;display:flex;flex-direction:column;align-items:flex-start;border:1.5px solid var(--line);background:var(--surface);
+  padding:6px 12px;cursor:pointer;min-width:74px;position:relative}
+.tab .d{font-family:var(--f-display);font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.03em}
+.tab .c{font-size:11px;color:var(--muted);white-space:nowrap}
+.tab:hover{border-color:var(--red)}
+.tab[aria-selected="true"]{background:var(--red);border-color:var(--red);color:var(--onred)}
+.tab[aria-selected="true"] .c{color:var(--onred);opacity:.85}
+.tab .today{position:absolute;top:-9px;right:-4px;background:var(--gold);color:var(--onlight);font-size:9px;font-weight:700;padding:1px 5px;letter-spacing:.08em}
+
+/* day */
+.dayhead{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-block:22px 16px}
+.dh-left{display:flex;align-items:center;gap:14px;min-width:0}
+.dh-left > div:last-child{min-width:0}
+.hanko{flex:none;width:58px;height:58px;border:3px solid var(--red);color:var(--red);display:grid;place-items:center;transform:rotate(-6deg);
+  font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;font-weight:900;font-size:15px;line-height:1.05;text-align:center;border-radius:6px}
+.dayhead h2{font-size:clamp(22px,3.6vw,34px);line-height:1.05;text-transform:uppercase;letter-spacing:.02em}
+.dayhead .meta{font-size:14px;color:var(--muted);margin-top:4px}
+.dayhead .meta a{color:var(--gold);text-decoration:none}
+.daygrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:20px;align-items:start}
+.mapcol{position:sticky;top:calc(env(safe-area-inset-top,0px) + 92px);display:flex;flex-direction:column;gap:12px}
+.mapbox{background:var(--surface);border:1px solid var(--line);overflow:hidden}
+.mapbox svg{width:100%;height:auto;display:block;touch-action:manipulation}
+.maplegend{display:flex;flex-wrap:wrap;gap:12px;padding:10px 14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.maplegend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px;border-radius:50%}
+.maplegend i.sq{border-radius:2px;background:var(--bg);border:2px solid var(--gold)}
+.legend-card{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start;background:var(--red-deep);border:1px solid var(--red);padding:14px}
+.legend-card svg{width:64px;height:auto}
+.legend-card .lbl{font-family:var(--f-display);font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--gold)}
+.legend-card p{margin:4px 0 0;font-family:var(--f-voice);font-size:16px;line-height:1.4;color:var(--ink)}
+
+/* stops */
+.stops{display:flex;flex-direction:column}
+.stop{display:grid;grid-template-columns:40px 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);padding:14px;scroll-margin-top:110px;transition:border-color .2s,box-shadow .2s}
+.stop.active{border-color:var(--red);box-shadow:0 0 0 1px var(--red), 0 0 24px rgba(216,30,30,.25)}
+.stop.done{opacity:.5}
+.num{width:32px;height:32px;display:grid;place-items:center;font-family:var(--f-display);font-size:15px;font-weight:700;cursor:pointer;border:0;border-radius:50%;background:var(--bone);color:var(--onlight)}
+.k-bar .num{background:var(--red);color:var(--onred)} .k-food .num{background:var(--gold)} .k-quiet .num{background:var(--moss)} .k-move .num{background:var(--muted)}
+.k-hotel .num{background:var(--bg);color:var(--gold);border:2px solid var(--gold);border-radius:4px}
+.stop-body{min-width:0;display:flex;flex-direction:column;gap:6px}
+.stop-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.time{font-family:var(--f-display);font-variant-numeric:tabular-nums;font-weight:700;font-size:15px;color:var(--red);letter-spacing:.04em}
+.stop h3{font-family:var(--f-body);font-size:17px;font-weight:600}
+.jp{font-size:13px;color:var(--muted);text-decoration:none}
+.jp:hover{color:var(--gold)}
+.chip{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:2px 7px;border:1px solid currentColor}
+.k-bar .chip{color:var(--red)} .k-food .chip{color:var(--gold)} .k-quiet .chip{color:var(--moss)} .k-sight .chip{color:var(--bone)} .k-move .chip{color:var(--muted)} .k-hotel .chip{color:var(--gold)}
+.stop .chip.off{color:var(--muted)}
+.stop p{margin:0;font-size:15px}
+.tip{font-size:14px;color:var(--muted)}
+.says{font-family:var(--f-voice);font-size:14px;line-height:1.45;border-left:3px solid var(--red);padding-left:10px}
+.says b{font-family:var(--f-display);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--red);display:block}
+.stop-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.sbtn{font-size:13px;padding:5px 11px;border:1px solid var(--line);background:var(--surface2);text-decoration:none;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.sbtn:hover{border-color:var(--red)}
+.sbtn.on{background:var(--moss);border-color:var(--moss);color:var(--onlight)}
+.gap{display:flex;align-items:center;gap:8px;padding:6px 0 6px 26px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.gap::before{content:"";width:2px;height:18px;background:repeating-linear-gradient(var(--red) 0 4px,transparent 4px 8px);opacity:.7}
+
+/* map svg */
+.m-bg{fill:var(--surface)} .m-dot{fill:var(--line)}
+.m-route{fill:none;stroke:var(--red);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:2 8}
+.m-hroute{fill:none;stroke:var(--gold);stroke-width:1.5;stroke-dasharray:3 5;opacity:.7}
+.m-mk circle,.m-mk rect{stroke:var(--surface);stroke-width:3;cursor:pointer}
+.m-mk text{fill:var(--onlight);font:700 12px var(--f-display);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.m-sight{fill:var(--bone)} .m-quiet{fill:var(--moss)} .m-food{fill:var(--gold)} .m-bar{fill:var(--red)} .m-move{fill:var(--muted)}
+.m-mk.bar text,.m-mk.move text{fill:var(--onred)}
+.m-mk.hotel rect{fill:var(--bg);stroke:var(--gold);stroke-width:2.5}
+.m-mk.hotel text{fill:var(--gold)}
+.m-hotel rect{fill:var(--bg);stroke:var(--gold);stroke-width:2.5}
+.m-hotel text{fill:var(--gold);font:700 13px var(--f-body);text-anchor:middle;dominant-baseline:central}
+.m-mk.done circle{opacity:.35}
+.m-mk.active circle{stroke:var(--ink);stroke-width:3}
+.m-lbl{fill:var(--ink);font:600 12px var(--f-body);paint-order:stroke;stroke:var(--surface);stroke-width:4px}
+.m-scale line{stroke:var(--ink);stroke-width:2} .m-scale text,.m-n text{fill:var(--muted);font:500 11px var(--f-body)}
+.m-n path{fill:var(--red)}
+.ov-city circle{fill:var(--bg);stroke:var(--red);stroke-width:3}
+.ov-city text{fill:var(--ink);font:700 14px var(--f-display);letter-spacing:.06em;text-transform:uppercase}
+.ov-city .sm{fill:var(--muted);font:500 11px var(--f-body);letter-spacing:0;text-transform:none}
+.ov-line{fill:none;stroke:var(--red);stroke-width:3;stroke-linecap:round}
+.ov-fuji{fill:var(--line)} .ov-cap{fill:var(--bone)}
+
+/* info */
+section.info{margin-top:44px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.info h2{font-size:20px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--red)}
+.info ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.info li::marker{color:var(--red)}
+.phr{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:15px;margin:0}
+.phr dt{font-weight:600} .phr dd{margin:0;color:var(--muted)}
+.foot{margin-top:28px;font-size:13px;color:var(--muted)}
+
+/* next bar */
+.nextbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--bg);border-top:3px solid var(--red);color:var(--ink);
+  padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.nextbar .in{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.nextbar .txt{min-width:0;flex:1}
+.nextbar .l{font-family:var(--f-display);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+.nextbar .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nextbar a{flex:none;background:var(--red);color:var(--onred);text-decoration:none;font-family:var(--f-display);font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px 16px;font-size:14px}
+.bearbtn{flex:none;width:48px;height:48px;border-radius:50%;border:2px solid var(--red);background:var(--surface);padding:2px;cursor:pointer;overflow:hidden}
+.bearbtn svg{width:100%;height:100%}
+.toast{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:21;max-width:min(340px,calc(100vw - 32px));
+  background:var(--surface);border:2px solid var(--red);padding:12px 14px;font-family:var(--f-voice);font-size:15px;line-height:1.45;
+  box-shadow:0 10px 40px rgba(216,30,30,.3);transform-origin:bottom right;animation:pop .22s ease-out}
+.toast .who{display:block;font-family:var(--f-display);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
+@keyframes pop{from{transform:scale(.8) rotate(-3deg);opacity:.3}to{transform:none;opacity:1}}
+@keyframes stance{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-3px) rotate(1.5deg)}}
+.hero .bear{transform-origin:50% 95%;animation:stance 3s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.hero .bear,.toast{animation:none}}
+
+@media (max-width:860px){
+  .overview{grid-template-columns:1fr}
+  .daygrid{grid-template-columns:1fr}
+  .mapcol{position:static}
+}
+@media (max-width:560px){
+  .hero{grid-template-columns:1fr;gap:12px;padding-top:22px}
+  .bear{width:140px}
+  .stop{grid-template-columns:34px 1fr;padding:12px;gap:10px}
+  .hanko{width:50px;height:50px;font-size:13px}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="bear" viewBox="0 0 220 240">
+      <!-- katana -->
+      <path d="M150 126 L207 16 L214 20 L159 130z" fill="#D9DCE1"/>
+      <path d="M152 124 L208 18" stroke="#FFFFFF" stroke-width="1.2" opacity=".8"/>
+      <ellipse cx="156" cy="130" rx="12" ry="5" transform="rotate(-62 156 130)" fill="#D6A84A"/>
+      <line x1="153" y1="137" x2="141" y2="160" stroke="#B3121A" stroke-width="9" stroke-linecap="round"/>
+      <line x1="153" y1="137" x2="141" y2="160" stroke="#0A0909" stroke-width="9" stroke-dasharray="3 4"/>
+      <!-- body -->
+      <ellipse cx="105" cy="172" rx="66" ry="58" fill="#5A3820"/>
+      <!-- armor -->
+      <path d="M58 142 Q105 126 152 142 L146 204 Q105 218 64 204z" fill="#121011"/>
+      <g stroke="#C8191E" stroke-width="3" stroke-dasharray="9 4" fill="none">
+        <path d="M62 154 Q105 140 148 154"/><path d="M62 168 Q105 154 148 168"/>
+        <path d="M63 182 Q105 168 147 182"/><path d="M64 196 Q105 182 146 196"/>
+      </g>
+      <circle cx="105" cy="160" r="9" fill="#D6A84A"/><circle cx="105" cy="160" r="4" fill="#C8191E"/>
+      <!-- feet -->
+      <ellipse cx="72" cy="226" rx="20" ry="9" fill="#3E2614"/>
+      <ellipse cx="138" cy="226" rx="20" ry="9" fill="#3E2614"/>
+      <!-- barrel -->
+      <rect x="10" y="156" width="52" height="60" rx="12" fill="#8A5524"/>
+      <rect x="10" y="168" width="52" height="6" fill="#2A1E14"/><rect x="10" y="198" width="52" height="6" fill="#2A1E14"/>
+      <path d="M10 164 q6 -14 18 -6 q8 -12 18 -2 q10 -6 16 6 q-26 6 -52 2z" fill="#FFF3D6"/>
+      <circle cx="36" cy="186" r="9" fill="#C8191E"/>
+      <path d="M31 183 h10 M36 179 v14" stroke="#FFF3D6" stroke-width="2.2" stroke-linecap="round"/>
+      <!-- shoulder plates -->
+      <path d="M40 126 L70 134 L64 170 L34 162z" fill="#121011"/>
+      <path d="M38 140 L68 148 M36 152 L66 160" stroke="#C8191E" stroke-width="2.5"/>
+      <path d="M170 126 L140 134 L146 166 L176 158z" fill="#121011"/>
+      <path d="M172 140 L142 148 M174 150 L144 158" stroke="#C8191E" stroke-width="2.5"/>
+      <!-- arms -->
+      <ellipse cx="50" cy="178" rx="13" ry="20" transform="rotate(-25 50 178)" fill="#4A2E18"/>
+      <ellipse cx="150" cy="150" rx="13" ry="20" transform="rotate(25 150 150)" fill="#4A2E18"/>
+      <circle cx="148" cy="144" r="11" fill="#5A3820"/>
+      <!-- head -->
+      <circle cx="105" cy="92" r="46" fill="#5A3820"/>
+      <!-- helmet horns -->
+      <path d="M100 38 Q76 26 64 2 Q86 18 104 30z" fill="#D6A84A"/>
+      <path d="M110 38 Q134 26 146 2 Q124 18 106 30z" fill="#D6A84A"/>
+      <!-- helmet -->
+      <path d="M57 86 Q58 34 105 30 Q152 34 153 86 Q105 70 57 86z" fill="#121011"/>
+      <path d="M84 40 Q105 34 126 40" stroke="#2D2728" stroke-width="2" fill="none"/>
+      <path d="M72 54 Q105 44 138 54" stroke="#2D2728" stroke-width="2" fill="none"/>
+      <path d="M51 88 Q105 66 159 88 L161 97 Q105 76 49 97z" fill="#B3121A"/>
+      <circle cx="105" cy="46" r="7" fill="#C8191E"/>
+      <!-- side flaps -->
+      <path d="M50 92 L32 124 L58 120 L62 96z" fill="#121011"/>
+      <path d="M40 112 L58 110" stroke="#C8191E" stroke-width="2.5"/>
+      <path d="M160 92 L178 124 L152 120 L148 96z" fill="#121011"/>
+      <path d="M170 112 L152 110" stroke="#C8191E" stroke-width="2.5"/>
+      <!-- brows -->
+      <path d="M66 96 L96 104 L94 110 L64 102z" fill="#0A0909"/>
+      <path d="M144 96 L114 104 L116 110 L146 102z" fill="#0A0909"/>
+      <!-- eyes -->
+      <path d="M72 106 L93 111 Q90 118 81 118 Q73 116 72 106z" fill="#F4EEE2"/>
+      <circle cx="87" cy="113" r="3.2" fill="#0A0909"/>
+      <path d="M138 106 L117 111 Q120 118 129 118 Q137 116 138 106z" fill="#F4EEE2"/>
+      <circle cx="123" cy="113" r="3.2" fill="#0A0909"/>
+      <!-- scar -->
+      <path d="M70 98 L92 126" stroke="#C8191E" stroke-width="3" stroke-linecap="round"/>
+      <path d="M74 108 L82 104 M80 116 L88 112" stroke="#C8191E" stroke-width="2" stroke-linecap="round"/>
+      <!-- muzzle -->
+      <ellipse cx="105" cy="126" rx="24" ry="15" fill="#C79560"/>
+      <ellipse cx="105" cy="118" rx="9" ry="6" fill="#0A0909"/>
+      <path d="M88 130 Q105 124 122 130 Q105 144 88 130z" fill="#2A0808"/>
+      <path d="M93 130 L97 130 L95 137z M113 130 L117 130 L115 137z" fill="#FFFFFF"/>
+      <!-- drunk blush (the truth) -->
+      <ellipse cx="74" cy="124" rx="7" ry="4" fill="#E0453A" opacity=".55"/>
+      <ellipse cx="136" cy="124" rx="7" ry="4" fill="#E0453A" opacity=".55"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="slash" aria-hidden="true"></div>
+    <svg class="bear" viewBox="0 0 220 240" role="img" aria-label="Хуйсунь Вэньпэй — медведь-самурай в доспехах, с катаной и бочонком пива"><use href="#bear"/></svg>
+    <div class="hero-text">
+      <span class="eyebrow">Япония · 8–22 ноября 2026 · 14 ночей</span>
+      <h1>Путь <span class="brush">Хуйсуня</span> Вэньпэя</h1>
+      <div class="bubble"><span class="who">Хуйсунь Вэньпэй, гроза пятидесяти идзакай</span><span id="heroQuote"></span></div>
+      <div class="hero-actions">
+        <button class="btn primary" id="goToday" type="button">Открыть сегодняшний день</button>
+        <button class="btn" id="moreQuote" type="button">Ещё былину</button>
+        <a class="btn" href="#info">Переезды и советы</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="overview" aria-label="Обзор поездки">
+    <div class="panel ov-map"><svg id="ovMap" viewBox="0 0 640 300" role="img" aria-label="Схема маршрута по городам"></svg>
+      <div class="ov-sub">Схема по реальным координатам. У каждого дня своя карта, а красная полоса внизу экрана ведёт к следующей точке через Google Maps.</div></div>
+    <div class="panel legs" id="legs"></div>
+  </section>
+
+  <div class="tabs-wrap"><div class="tabs" id="tabs" role="tablist" aria-label="Дни поездки"></div></div>
+
+  <main id="day"></main>
+
+  <section class="info" id="info">
+    <div class="panel">
+      <h2>Переезды</h2>
+      <ul>
+        <li><b>Кансай → отель в Осаке:</b> Nankai до Намбы, около 40 мин, потом 10 минут пешком до Ниппомбаси. Заведите Suica или ICOCA в телефоне.</li>
+        <li><b>Осака → Нара:</b> Kintetsu от Ниппомбаси прямо до Кинтэцу-Нара, около 40 мин.</li>
+        <li><b>Осака → Киото:</b> метро Сакайсудзи от Ниппомбаси до Китахамы, там Keihan до Гион-Сидзё — 5 минут от вашего отеля. Около часа на всё.</li>
+        <li><b>Киото → Кавагутико:</b> синкансэн Hikari или Kodama до Мисимы (Nozomi там не останавливается), затем автобус Fujikyu около 2 ч. Место E в синкансэне — со стороны Фудзи.</li>
+        <li><b>Кавагутико → Асакуса:</b> автобус до Busta Shinjuku или поезд Fuji Excursion до Синдзюку, дальше около 35 мин до станции Асакуса. Бронируйте заранее.</li>
+        <li><b>Багаж:</b> из киотского отеля отправьте чемоданы такюбином прямо в KOKO Hotel (идут 1–2 дня). К Фудзи — налегке.</li>
+        <li><b>Вылет:</b> от станции Асакуса, в минуте от отеля, ходят прямые поезда в Нариту (около часа) и в Ханэду (около 45 мин).</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2>Кодекс бара</h2>
+      <ul>
+        <li><b>Отоси</b> — обязательная закуска-сбор 300–600 ¥ с человека. Так принято.</li>
+        <li>В Голден Гай и крошечных барах часто плата за место. Обычно написано на двери.</li>
+        <li>Табличка «会員制» или «Regulars only» — проходите мимо.</li>
+        <li>Держите наличные: в маленьких барах карты принимают не везде.</li>
+        <li>В некоторых барах курят. Если важно — спросите «кинъэн?» (禁煙).</li>
+        <li>Часы маленьких мест меняются. Проверяйте в Google Maps накануне.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2>Боевые слова</h2>
+      <dl class="phr">
+        <dt>Нама бииру</dt><dd>生ビール — разливное пиво</dd>
+        <dt>Осусумэ ва?</dt><dd>おすすめは? — что посоветуете?</dd>
+        <dt>Сумимасэн!</dt><dd>すみません — позвать официанта</dd>
+        <dt>Мо иппай</dt><dd>もう一杯 — ещё одну</dd>
+        <dt>Кампай!</dt><dd>乾杯 — боевой клич</dd>
+        <dt>Окайкэй</dt><dd>お会計 — счёт, пожалуйста</dd>
+        <dt>Готисо-сама</dt><dd>ごちそうさま — спасибо за еду, на выходе</dd>
+      </dl>
+    </div>
+    <div class="panel">
+      <h2>Сезон</h2>
+      <ul>
+        <li>Середина ноября: днём 12–18°, вечером прохладно. Темнеет около 16:45, поэтому парки и храмы — до обеда.</li>
+        <li>Клёны в Киото и у Фудзи начинают краснеть, пик ближе к концу месяца.</li>
+        <li>Фестиваль клёнов в Кавагутико идёт 7–29 ноября, подсветка от заката до 21:00.</li>
+        <li>Фудзи лучше всего видно рано утром. Днём её часто закрывают облака.</li>
+      </ul>
+    </div>
+  </section>
+  <p class="foot">Отметки «были тут» хранятся только в вашем браузере, у друга будут свои. Японское название под каждой точкой открывает её в Google Maps.</p>
+</div>
+
+<div class="nextbar">
+  <div class="in">
+    <button class="bearbtn" id="bearBtn" type="button" aria-label="Послушать Вэньпэя"><svg viewBox="40 20 130 130"><use href="#bear"/></svg></button>
+    <div class="txt"><div class="l" id="nextL">Дальше</div><div class="t" id="nextT">—</div></div>
+    <a id="nextA" href="#" target="_blank" rel="noopener">Маршрут →</a>
+  </div>
+</div>
+<div class="toast" id="toast" hidden><span class="who">Вэньпэй рычит</span><span id="toastQ"></span></div>
+
+<script>
+const QUOTES=[
+"Хорошее времяпрепровождение самурая — это пить пиво. Плохое — это когда пиво кончилось.",
+"Мой меч не знает пощады. Особенно к последнему якитори на тарелке.",
+"Путь воина начинается с первого глотка. Второй глоток — это уже философия.",
+"Я не пьян. Я в состоянии боевой медитации.",
+"Каждая кружка — это поединок. Счёт 4000:0. Кружки пока не сдаются.",
+"Настоящий ронин не имеет господина. Только бармена.",
+"Однажды я зарубил дракона. Он был нарисован на стене идзакаи, но смотрел очень дерзко.",
+"Кампай — древний боевой клич. Если крикнуть его достаточно яростно, появляется вторая кружка.",
+"Шрам на глазу? Битва при Дотонбори. Против двери. Дверь была стеклянная и коварная.",
+"Бочонок — не пиво. Это доспех. Доспех, который можно выпить.",
+"Мастер чайной церемонии научил меня всему. Теперь я провожу пивную церемонию. Она короче и громче.",
+"Сакэ подают в маленьких чашечках, чтобы воин не загордился. Поэтому я заказываю двенадцать.",
+"Если в бар надо пригнуться и вывески нет — это мой додзё.",
+"Вэньпэй не отступает. Вэньпэй стратегически перемещается к соседнему бару.",
+"Шлем я ношу, чтобы мысли не сбежали после третьей кружки. Две уже сбежали.",
+"Учитель сказал: будь как вода. Я выбрал быть как пиво. Тоже жидкость, но с характером.",
+"Обувь снимают у входа, чтобы враг не понял, сколько нас. И чтобы я не ушёл раньше времени.",
+"Якитори — это шашлык, который прошёл обучение в монастыре и вернулся мстить.",
+"Стоячий бар придуман для самураев: можно мгновенно выхватить меч. Или кружку. Обычно кружку.",
+"Ни один ниндзя не видел моих слёз. Я плачу, только когда закрывается бар.",
+"Хочешь бессмертия, путник? Закуска. Всегда бери закуску.",
+"Три добродетели воина: честь, ярость и знать, где ближайший комбини.",
+"Мой клан древний и грозный. Он называется «Ещё по одной».",
+"Карта — для слабых. Я иду на запах гриля. Но вы, смертные, всё-таки идите по карте.",
+"Враги дрожат, когда слышат, как открывается мой бочонок. Это звук войны. И пены.",
+"Я выиграл сто битв. Девяносто девять из них — с меню на японском.",
+"Катана у меня настоящая. Правда, точил я её последний раз об открывашку."
+];
+const KIND={sight:"Главное",quiet:"Тихое место",food:"Еда",bar:"Бар / вечер",move:"Переезд",hotel:"Ночлег"};
+const HOTELS={
+ osaka:{n:"Onyado Nono Namba Natural Hot Spring",jp:"御宿 野乃 なんば",mq:"Onyado Nono Namba Natural Hot Spring",ll:[34.6668,135.5068]},
+ kyoto:{n:"Stay Sakura Kyoto Gion Miyagawacho",jp:"Stay SAKURA 京都 祇園宮川",mq:"Stay SAKURA Kyoto Gion Miyagawa",ll:[34.9985,135.7718]},
+ kawa:{n:"Yamagishi Ryokan",jp:"山岸旅館",mq:"山岸旅館 河口湖",ll:[35.5038,138.7700]},
+ tokyo:{n:"KOKO Hotel Asakusa Komagata",jp:"KOKO HOTEL 浅草駒形",mq:"KOKO HOTEL Asakusa Komagata",ll:[35.7087,139.7956]}
+};
+
+const DAYS=[
+{d:8,dow:"Вс",city:"Осака",h:"osaka",title:"Высадка в Намбе",
+ legend:"Когда я ступил на землю Осаки, сорок ниндзя выпрыгнули из-за угла. Я угостил их пивом. Теперь это мои сорок ниндзя. Один, правда, оказался фонарём.",
+ stops:[
+ {t:"15:00",n:"Аэропорт Кансай → Намба",jp:"関西空港",mq:"関西国際空港",ll:[34.4347,135.2440],k:"move",skip:1,d:"Поезд Nankai до Намбы, около 40 минут, оттуда 10 минут пешком до отеля."},
+ {t:"16:15",n:"Заселение и онсэн",hotel:"osaka",k:"hotel",d:"Бросаем вещи. Если есть полчаса — сразу в горячий источник отеля, смыть перелёт."},
+ {t:"17:30",n:"Хозэндзи-ёкотё",jp:"法善寺横丁",ll:[34.6685,135.5024],k:"quiet",d:"Мощёный переулок с фонарями в двух шагах от Дотонбори, но в разы тише. Статуя Мидзукакэ-фудо целиком заросла мхом: полейте её водой из ковшика и загадайте желание.",q:"Я полил статую пивом. Мох стал гуще. Совпадение? Не думаю."},
+ {t:"18:00",n:"Дотонбори и мост Эбису",jp:"道頓堀 戎橋",ll:[34.6688,135.5013],k:"sight",d:"Неон, бегущий человек Glico, гигантский краб над входом. Двадцати минут хватит — смотрим, фотографируем и уходим на юг."},
+ {t:"18:45",n:"Ура-Намба",jp:"裏なんば",ll:[34.6650,135.5055],k:"bar",d:"Сеть переулков за Сэннитимаэ, прямо у вашего отеля: стоячие бары, якитори, оден, кусикацу. Заходите туда, где сидят японцы и меню написано от руки. Начните с «нама бииру» и «осусумэ ва?».",tip:"Цепочка на вечер: оден → якитори → маленький сакэ-бар. В каждом по одной-две позиции."}
+ ]},
+{d:9,dow:"Пн",city:"Нара",h:"osaka",title:"Олени, мох и сакэ с утра",
+ legend:"В Наре олени кланяются мне первыми. Они чуют силу. И крекеры в моём бочонке.",
+ stops:[
+ {t:"08:00",n:"Ниппомбаси → Кинтэцу-Нара",jp:"近鉄奈良駅",ll:[34.6843,135.8273],k:"move",d:"Линия Kintetsu прямо от станции у отеля, экспресс около 40 минут. Выезжайте рано: к 10 утра в Наре людей больше, чем оленей."},
+ {t:"08:50",n:"Тодай-дзи",jp:"東大寺",ll:[34.6890,135.8398],k:"sight",d:"Огромный деревянный зал с 15-метровым бронзовым Буддой. В ноябре открывается в 8:00, поэтому идём первым делом. Найдите столб с дырой размером с ноздрю Будды: кто пролез, тот просветлён.",q:"Я пролез. Застрял. Просветлился прямо там, пока меня вытаскивали."},
+ {t:"09:45",n:"Нигацу-до",jp:"二月堂",ll:[34.6894,135.8445],k:"quiet",d:"Зал на склоне над Тодай-дзи. Бесплатно, деревянная терраса с видом на крыши Нары. Спускайтесь по северной лестнице вдоль глиняных стен — одна из самых красивых тихих троп города."},
+ {t:"10:40",n:"Касуга-тайся лесными тропами",jp:"春日大社",ll:[34.6813,135.8484],k:"quiet",d:"Идите не по главной аллее, а боковыми тропками: тысячи каменных фонарей в мху, древние деревья, олени. Само святилище ярко-красное."},
+ {t:"11:40",n:"Синъякуси-дзи",jp:"新薬師寺",ll:[34.6766,135.8460],k:"quiet",d:"Храм VIII века в жилом квартале. Будда-целитель и вокруг двенадцать свирепых генералов-хранителей. Туристов почти нет.",q:"Двенадцать генералов. Свирепые. Я посмотрел на них, они на меня. Ничья."},
+ {t:"12:30",n:"Обед: какиноха-суси в Хирасо",jp:"平宗 奈良店",ll:[34.6797,135.8302],k:"food",d:"Местное суси с макрелью или лососем, завёрнутое в лист хурмы. Лёгкий обед, чтобы хватило сил на сакэ."},
+ {t:"13:30",n:"Квартал Нарамати",jp:"ならまち",ll:[34.6775,135.8297],k:"quiet",d:"Старый купеческий квартал: узкие деревянные дома, красные тряпичные обезьянки-обереги на дверях, лавки с кистями и благовониями. Сворачивайте в любой переулок."},
+ {t:"14:30",n:"Сакэварня Харусика",jp:"春鹿 今西清兵衛商店",ll:[34.6764,135.8318],k:"bar",d:"Дегустация пяти сакэ за символические деньги, бокал остаётся вам. Спросите, какое сейчас свежее, сезонное.",q:"Самурай не смотрит на часы. Самурай смотрит в бокал."},
+ {t:"15:30",n:"Сад Ёсикиэн",jp:"吉城園",ll:[34.6870,135.8355],k:"quiet",d:"Мшистый сад с чайным домиком, в ноябре клёны начинают краснеть. Раньше иностранцам вход был бесплатным по паспорту — возьмите его и спросите."},
+ {t:"16:20",n:"Кофуку-дзи на закате",jp:"興福寺",ll:[34.6830,135.8318],k:"sight",d:"Храмовый комплекс у пруда Сарусава. Пятиярусная пагода на долгой реставрации, но восточный зал и вечерний свет над прудом того стоят."},
+ {t:"18:30",n:"Синсэкай ночью",jp:"新世界 ジャンジャン横丁",mq:"ジャンジャン横丁",ll:[34.6505,135.5060],k:"bar",skip:1,d:"Вернувшись в Осаку, две остановки от отеля. Ретро-квартал под башней Цутэнкаку: неон, крытый переулок Дзян-дзян ёкотё, стоячие бары, работяги за стойками."},
+ {t:"19:00",n:"Кусикацу в Яэкацу",jp:"八重勝",mq:"八重勝 大阪",ll:[34.6503,135.5058],k:"food",skip:1,d:"Жареные шпажки — главная еда Осаки. Очередь движется быстро. Правило: в общий соус макать один раз!",q:"Я макнул дважды. С тех пор меня ищет вся Осака. Не будьте как я."}
+ ]},
+{d:10,dow:"Вт",city:"Осака",h:"osaka",title:"Замок, крытые улицы и Тэмма",
+ legend:"Осакский замок строили, чтобы защититься от меня. Не помогло. Я вошёл через сувенирную лавку.",
+ stops:[
+ {t:"08:30",n:"Осакский замок",jp:"大阪城",ll:[34.6873,135.5262],k:"sight",d:"Главное здесь — исполинские каменные стены и рвы, а не музей внутри башни. Утром парк пуст, по нему бегают местные. Обойдите замок по внешнему кругу."},
+ {t:"10:15",n:"Святилище Осака Тэммангу",jp:"大阪天満宮",ll:[34.6960,135.5125],k:"quiet",d:"Святилище покровителя учёбы, в будний день здесь только местные."},
+ {t:"10:45",n:"Тэндзинбаси-судзи",jp:"天神橋筋商店街",ll:[34.7010,135.5118],k:"food",d:"Самая длинная крытая торговая улица Японии, 2,6 км. Пройдите на север хотя бы километр: крокеты, тайяки, старые лавки, никаких туристов."},
+ {t:"12:30",n:"Накадзаки-тё",jp:"中崎町",ll:[34.7080,135.5050],k:"quiet",d:"Квартал деревянных домов, уцелевших в войну, в пяти минутах от небоскрёбов Умэды. Внутри кофейни, винтаж и крошечные места на обед."},
+ {t:"14:30",n:"Карахори",jp:"空堀商店街",ll:[34.6735,135.5195],k:"quiet",d:"Ещё один уцелевший старый район на холме: узкие проулки, длинные деревянные дома-нагая, каменные ступени. Туристы сюда не доезжают."},
+ {t:"16:00",n:"Рынок Куромон",jp:"黒門市場",ll:[34.6655,135.5065],k:"food",d:"Рыбный рынок в пяти минутах от отеля. Ближе к закрытию народу меньше. Морской ёж, гребешки на гриле, клубника."},
+ {t:"17:00",n:"Онсэн в отеле",hotel:"osaka",k:"hotel",d:"Перерыв перед боем: горячий источник и полчаса тишины."},
+ {t:"18:30",n:"Тэмма",jp:"天満 居酒屋",mq:"天満駅 居酒屋",ll:[34.7045,135.5125],k:"bar",d:"Главный пьющий район для своих: вокруг станции JR Тэмма десятки идзакай, морепродукты, шашлычки, недорогое сакэ. Столы выставлены прямо на улицу.",tip:"Ищите места, где много дыма от гриля и громкие офисные компании."}
+ ]},
+{d:11,dow:"Ср",city:"Киото",h:"kyoto",title:"Философская тропа и Гион",
+ legend:"Философская тропа названа в честь моего главного вопроса: а не пора ли по второй?",
+ stops:[
+ {t:"10:00",n:"Осака → Гион-Сидзё",jp:"祇園四条駅",ll:[35.0037,135.7724],k:"move",d:"Метро Сакайсудзи до Китахамы, там Keihan до Гион-Сидзё. Около часа."},
+ {t:"11:15",n:"Оставить вещи",hotel:"kyoto",k:"hotel",d:"Заселение обычно с 15:00, но рюкзаки возьмут."},
+ {t:"12:00",n:"Обед в Гионе",jp:"祇園 うどん",mq:"祇園 うどん",ll:[35.0040,135.7760],k:"food",d:"Удон или соба в любом небольшом месте на боковых улицах Гиона. Главную Сидзё-дори обходите."},
+ {t:"13:30",n:"Философская тропа от Гинкаку-дзи",jp:"哲学の道",ll:[35.0268,135.7958],k:"quiet",d:"Автобус до Гинкаку-дзи. Двухкилометровая тропа вдоль канала под клёнами, идите на юг не спеша."},
+ {t:"14:15",n:"Хонэн-ин",jp:"法然院",ll:[35.0224,135.7975],k:"quiet",d:"Ворота с соломенной крышей, поросшей мхом, и песчаные холмики с рисунком у входа. Бесплатно и тихо."},
+ {t:"15:15",n:"Нандзэн-дзи и акведук Суйрокаку",jp:"南禅寺 水路閣",ll:[35.0110,135.7945],k:"sight",d:"Кирпичный акведук XIX века посреди дзэнского храма, по нему до сих пор течёт вода. Рядом огромные ворота Санмон."},
+ {t:"16:00",n:"Наклонная Кэагэ и тоннель",jp:"蹴上インクライン",ll:[35.0092,135.7885],k:"quiet",d:"Старые рельсы, по которым тянули лодки в гору, теперь по ним гуляют. Под ними кирпичный тоннель с кладкой спиралью."},
+ {t:"16:45",n:"Гион Сиракава в сумерках",jp:"祇園白川 巽橋",ll:[35.0055,135.7748],k:"quiet",d:"Ивы, каменный мост Тацуми, дома над каналом. В сумерках красивее и тише, чем на Ханамикодзи. Майко не преследуйте с камерой — они идут на работу."},
+ {t:"17:30",n:"Миягава-тё вечером",jp:"宮川町",ll:[34.9978,135.7712],k:"quiet",d:"Ваш квартал — один из пяти районов гейш Киото, но туристов в разы меньше, чем в Гионе. Фонари с тремя кольцами — его эмблема."},
+ {t:"18:15",n:"Понто-тё",jp:"先斗町",ll:[35.0058,135.7710],k:"sight",d:"Узкий фонарный переулок вдоль реки Камо. Пройдите насквозь, ищите фонари с птичкой-ржанкой."},
+ {t:"19:00",n:"Кияматидори",jp:"木屋町通",ll:[35.0075,135.7700],k:"bar",d:"Улица вдоль канала Такасэ, где пьют студенты и местные. Дешевле и проще Понто-тё. Ищите таблички 立ち飲み — стоячие бары.",tip:"Якитори в маленьком месте, потом сакэ-бар на втором этаже. До отеля 10 минут пешком."}
+ ]},
+{d:12,dow:"Чт",city:"Киото",h:"kyoto",title:"Тысяча ворот и квартал сакэ",
+ legend:"Я прошёл тысячу ворот Инари. Каждые ворота — тост. Вниз меня несли лисы. Аккуратно, с уважением.",
+ stops:[
+ {t:"06:30",n:"Пустые Нинэндзака и пагода Ясака",jp:"八坂の塔",ll:[34.9986,135.7793],k:"quiet",d:"В 10 минутах от отеля. На рассвете каменные улицы Нинэндзака и Саннэндзака совершенно пусты, а днём по ним не пройти."},
+ {t:"07:45",n:"Фусими Инари",jp:"伏見稲荷大社",ll:[34.9671,135.7727],k:"sight",d:"Keihan от Гион-Сидзё прямо до станции Фусими-Инари, 10 минут. Тысячи красных ворот по склону горы, открыто круглосуточно. До 9 утра почти пусто."},
+ {t:"08:45",n:"Выше развилки Ёцуцудзи",jp:"稲荷山 四ツ辻",ll:[34.9668,135.7853],k:"quiet",d:"На развилке почти все разворачиваются. Идите дальше по кругу через вершину: маленькие святилища с каменными лисами, чайные домики, лес. Около 2 часов на всё.",q:"Лисы тут — посланники богов. Я передал через них просьбу о пиве. Ответа жду до сих пор."},
+ {t:"11:15",n:"Сакэварни Фусими: музей Гэккэйкан",jp:"月桂冠大倉記念館",ll:[34.9318,135.7613],k:"sight",d:"Две станции на юг по Keihan. Белые склады пивоварен вдоль канала, музей сакэ с дегустацией."},
+ {t:"12:15",n:"Обед в Кидзакура Каппа Кантри",jp:"キザクラカッパカントリー",ll:[34.9358,135.7605],k:"bar",d:"Ресторан в старой пивоварне. Сет из нескольких сакэ и местное пиво Kyoto Beer, к ним гёдза или суси. Талисман — каппа, водяной из фольклора.",tip:"Сет делите на двоих, вечер ещё впереди."},
+ {t:"13:45",n:"Лодки Дзиккокубунэ",jp:"十石舟",ll:[34.9312,135.7625],k:"quiet",d:"Деревянная лодка по каналу мимо ив и складов, около 50 минут. Сезон до начала декабря, билеты у причала за музеем Гэккэйкан."},
+ {t:"15:30",n:"Сэнъю-дзи",jp:"泉涌寺",ll:[34.9768,135.7755],k:"quiet",d:"Храм императорской семьи на склоне холма. Огромная территория и почти никого, в отличие от соседнего Тофуку-дзи.",tip:"Закрывается около 16:30."},
+ {t:"17:30",n:"Торговая улица Фурукава-тё",jp:"古川町商店街",ll:[35.0085,135.7798],k:"quiet",d:"Старая крытая улочка у станции Хигасияма: овощные лавки, тофу, соленья. Здесь живут обычные киотосцы."},
+ {t:"18:15",n:"Beer Komachi",jp:"ビア小町",ll:[35.0083,135.7793],k:"bar",d:"Крошечный бар японского крафта прямо на Фурукава-тё. Несколько кранов, сезонные закуски из местных овощей. Мест мало — приходите к открытию.",q:"Здесь я сочинил свою лучшую былину. Её никто не помнит, включая меня."}
+ ]},
+{d:13,dow:"Пт",city:"Киото",h:"kyoto",title:"Арасияма без толпы",
+ legend:"В бамбуковой роще я сразился с ветром. Ветер проиграл и ушёл за закуской.",
+ stops:[
+ {t:"07:30",n:"Бамбуковая роща",jp:"竹林の小径",ll:[35.0170,135.6713],k:"sight",d:"В половину восьмого ещё слышно, как шуршит бамбук. В десять будет слышно только людей. Выезжать около 6:45, на такси быстрее всего."},
+ {t:"08:15",n:"Вилла Окоти-сансо",jp:"大河内山荘",ll:[35.0175,135.6690],k:"quiet",d:"Сады бывшей виллы киноактёра на холме, вид на горы. Вход платный, с чашкой матча, поэтому людей мало. Открывается около 9:00 — до этого погуляйте вокруг пруда Окадзава."},
+ {t:"09:40",n:"Гио-дзи",jp:"祇王寺",ll:[35.0225,135.6655],k:"quiet",d:"Крошечный храм: ковёр мха под клёнами и соломенный домик. Пятнадцать минут абсолютной тишины."},
+ {t:"10:15",n:"Адасино Нэнбуцу-дзи",jp:"化野念仏寺",ll:[35.0262,135.6638],k:"quiet",d:"Тысячи маленьких каменных статуй в память о безымянных умерших. За храмом короткая бамбуковая тропа без селфи-палок."},
+ {t:"10:45",n:"Улица Сага-Торимото",jp:"嵯峨鳥居本",ll:[35.0272,135.6620],k:"quiet",d:"Сохранившаяся старая улица с соломенными крышами и чайными домами. Самое настоящее место дня. Идите вверх по склону."},
+ {t:"11:20",n:"Отаги Нэнбуцу-дзи",jp:"愛宕念仏寺",ll:[35.0312,135.6585],k:"quiet",d:"1200 каменных архатов, вырезанных обычными прихожанами. У каждого своё лицо: один пьёт сакэ, другой с теннисной ракеткой. Найдите своего.",q:"Тот, что с кувшином и свирепым лицом, — это я. Скульптор испугался и не стал доделывать."},
+ {t:"12:45",n:"Обед: юдофу",jp:"湯豆腐 嵯峨",mq:"湯豆腐 嵯峨嵐山",ll:[35.0160,135.6780],k:"food",d:"Тофу в горячем бульоне — классика Арасиямы. Ищите место у станции Сага-Арасияма, а не на главной улице."},
+ {t:"14:45",n:"Квартал Камисити-кэн",jp:"上七軒",ll:[35.0290,135.7385],k:"quiet",d:"Старейший квартал гейш Киото, туристы почти не доходят. Деревянные чайные дома, лавки сладостей."},
+ {t:"15:30",n:"Китано Тэммангу",jp:"北野天満宮",ll:[35.0312,135.7350],k:"sight",d:"Святилище с бронзовыми быками, которых трут на удачу. В ноябре открыт кленовый сад у старого земляного вала."},
+ {t:"18:00",n:"Bungalow",jp:"バンガロー 京都",mq:"Bungalow Kyoto craft beer",ll:[35.0036,135.7497],k:"bar",d:"Бар японского крафта у перекрёстка Сидзё-Омия: бетон, дерево, около десятка кранов и хорошая еда. Публика в основном местная."},
+ {t:"20:15",n:"Sake Bar Yoramu",jp:"酒BAR よらむ",ll:[35.0108,135.7604],k:"bar",d:"Маленький бар, где хозяин подбирает сакэ под ваш вкус, включая выдержанные. Около десяти мест, работает обычно со среды по субботу вечером.",tip:"Скажите, что любите (сухое, фруктовое, крепкое) — и доверьтесь."}
+ ]},
+{d:14,dow:"Сб",city:"Кавагутико",h:"kawa",title:"К подножию Фудзи",
+ legend:"Фудзи-сан прячется в облаках каждый раз, когда видит меня. Боится. И правильно делает.",
+ stops:[
+ {t:"08:15",n:"Синкансэн Киото → Мисима",jp:"三島駅",mq:"三島駅 静岡",ll:[35.1263,138.9110],k:"move",skip:1,d:"От отеля на такси до станции Киото. Hikari или Kodama, около 2 часов. Место E: если повезёт, Фудзи появится в окне перед Мисимой. Чемоданы заранее отправьте из отеля в Токио."},
+ {t:"10:45",n:"Автобус Мисима → Кавагутико",jp:"河口湖駅",ll:[35.4986,138.7688],k:"move",d:"Автобус Fujikyu, около 2 часов. В субботу точно бронируйте заранее."},
+ {t:"13:00",n:"Оставить вещи",hotel:"kawa",k:"hotel",d:"Около 10 минут пешком от станции к берегу."},
+ {t:"13:30",n:"Сакэварня Идэ (марка Кай)",jp:"井出醸造店",ll:[35.5042,138.7647],k:"bar",d:"Семейная сакэварня, которой больше трёхсот лет, на воде с Фудзи. Дегустация и магазин. Днём, пока открыто.",q:"Вода с самой Фудзи! Значит, каждый глоток — восхождение. Я покорил вершину четырнадцать раз за час."},
+ {t:"14:30",n:"Северный берег и парк Оиси",jp:"大石公園",ll:[35.5225,138.7465],k:"quiet",d:"Автобус Red Line вдоль озера. Парк у самой воды — лучший береговой вид на Фудзи. Идите по набережной на восток."},
+ {t:"15:45",n:"Музей Кубота Иттику",jp:"久保田一竹美術館",ll:[35.5275,138.7613],k:"sight",d:"Музей кимоно-пейзажей. Даже если кимоно вам не интересны, здание из камня и дерева и сад с водопадом стоят билета."},
+ {t:"16:40",n:"Кленовый коридор: подсветка",jp:"もみじ回廊",ll:[35.5259,138.7623],k:"sight",d:"Фестиваль клёнов идёт 7–29 ноября, подсветка от заката до 21:00. В ваши даты клёны будут в разгаре или на подходе. Рядом лотки с местной едой."},
+ {t:"18:30",n:"Ужин: хото",jp:"ほうとう 河口湖",mq:"ほうとう 河口湖駅",ll:[35.5003,138.7672],k:"food",d:"Плоская лапша в мисо-бульоне с тыквой и овощами, в железном котелке. Самые известные места с очередями, любая небольшая хотоя у станции не хуже.",tip:"Потом онсэн в рёкане. Самурай должен быть отмыт перед былинами."}
+ ]},
+{d:15,dow:"Вс",city:"Фудзиёсида",h:"kawa",title:"Рассвет у пагоды и бары размером со шкаф",
+ legend:"На рассвете я взбежал на 398 ступеней к пагоде. Ну, на сорок. Остальные, по преданию, взбежали за меня.",
+ stops:[
+ {t:"06:15",n:"Пагода Тюрэйто",jp:"忠霊塔 新倉山浅間公園",mq:"新倉山浅間公園",ll:[35.5014,138.8014],k:"sight",d:"Та самая открытка: пятиярусная пагода с Фудзи позади. На рассвете больше всего шансов увидеть гору без облаков. Электричка Fujikyu до Симоёсиды, потом 398 ступеней.",tip:"Утром у Фудзи около нуля — тёплое обязательно."},
+ {t:"07:45",n:"Утренние улочки Симоёсиды",jp:"下吉田",ll:[35.4890,138.8040],k:"quiet",d:"Бывший город ткачей: старые фасады, вывески середины прошлого века, мастерские. Утром только кошки и старики с метлой."},
+ {t:"09:15",n:"Ёсида-удон",jp:"吉田のうどん",mq:"吉田のうどん 富士吉田",ll:[35.4848,138.8010],k:"food",d:"Самый жёсткий удон Японии, с варёной капустой и острой пастой судзуридаси. Многие лавки работают до обеда, некоторые по воскресеньям закрыты — смотрите, где открыто."},
+ {t:"10:15",n:"Китагути Хонгу Фудзи Сэнгэн",jp:"北口本宮冨士浅間神社",ll:[35.4747,138.7945],k:"quiet",d:"Святилище в лесу древних криптомерий, откуда веками начинали восхождение паломники. Огромные деревянные тории и тишина."},
+ {t:"11:30",n:"Улица Хонтё с видом на Фудзи",jp:"本町通り 富士吉田",ll:[35.4878,138.8030],k:"sight",d:"Улица уходит прямо к Фудзи. Это живая дорога, местные устали от людей на проезжей части. Снимайте с тротуара."},
+ {t:"13:15",n:"Сайко Иясино Сато Нэнба",jp:"西湖いやしの里根場",ll:[35.5002,138.6470],k:"quiet",d:"Деревня соломенных домов у озера Сай: мастерские, гончары, сушёная хурма. Спокойнее раскрученного Осино Хаккай. Автобус Green Line."},
+ {t:"15:15",n:"Озеро Сёдзи",jp:"精進湖",ll:[35.4870,138.6060],k:"quiet",d:"Самое маленькое и тихое из пяти озёр. По желанию, если остались силы."},
+ {t:"17:00",n:"Онсэн в рёкане",hotel:"kawa",k:"hotel",d:"Отогреться перед вечером."},
+ {t:"18:45",n:"Синсэкай Кампай Ёкотё",jp:"新世界乾杯横丁",ll:[35.4893,138.8016],k:"bar",d:"Ретро-переулок крошечных баров у станции Гэккодзи: стойка на 5–6 человек, хозяин за ней, местные завсегдатаи. Самая неподдельная ночь поездки. В воскресенье работают не все — ищите, где горит свет.",q:"Здесь бары такие маленькие, что если я вхожу с бочонком, кому-то приходится выйти. Обычно выходит бочонок. Пустым."}
+ ]},
+{d:16,dow:"Пн",city:"Токио",h:"tokyo",title:"В Токио: ночная Асакуса",
+ legend:"Токио — город тысячи баров. Я бывал в тысяче одном. Тысяча первый — это я, когда открываю бочонок.",
+ stops:[
+ {t:"08:30",n:"Канатная дорога на гору Тэндзё",jp:"カチカチ山ロープウェイ",mq:"河口湖 カチカチ山ロープウェイ",ll:[35.4990,138.7710],k:"sight",skip:1,d:"В пяти минутах от рёкана. Последний взгляд на Фудзи и озеро сверху, до 10 утра без очереди."},
+ {t:"10:30",n:"Кавагутико → Синдзюку → Асакуса",jp:"浅草駅",ll:[35.7106,139.7975],k:"move",d:"Автобус до Busta Shinjuku около 2 часов или поезд Fuji Excursion, дальше около 35 минут до Асакусы."},
+ {t:"14:00",n:"Заселение",hotel:"tokyo",k:"hotel",d:"Чемоданы из Киото уже должны ждать на ресепшене."},
+ {t:"15:00",n:"Набережная Сумиды",jp:"隅田公園",ll:[35.7130,139.8030],k:"quiet",d:"Прогулка вдоль реки от моста Адзума: вид на Скайтри и золотое «пламя» на крыше здания Асахи. Спокойный первый час в Токио."},
+ {t:"16:15",n:"Улица Каппабаси",jp:"かっぱ橋道具街",ll:[35.7125,139.7882],k:"sight",d:"Улица кухонной утвари: японские ножи, пластиковые муляжи еды, керамика. Магазины работают примерно до 17:00."},
+ {t:"18:00",n:"Хоппи-дори",jp:"ホッピー通り",ll:[35.7140,139.7935],k:"bar",d:"Улица идзакай со столами прямо на тротуаре: тушёные потроха никоми, жареное и хоппи — пивной напиток, который смешивают с сётю. На нём вырос рабочий Токио."},
+ {t:"20:30",n:"Сэнсо-дзи ночью",jp:"浅草寺",ll:[35.7148,139.7967],k:"sight",d:"После восьми вечера храм подсвечен, толп нет, лавки закрыты. Лучшее время, чтобы его увидеть. Отель в 10 минутах."}
+ ]},
+{d:17,dow:"Вт",city:"Токио",h:"tokyo",title:"Курамаэ, сумо и пиво в Рёгоку",
+ legend:"В Рёгоку я поборол сумоиста. Он спал, но это не умаляет моей победы.",
+ stops:[
+ {t:"07:00",n:"Утро Асакусы",jp:"伝法院通り",ll:[35.7118,139.7945],k:"quiet",d:"Пока город спит: Дэмпоин-дори, переулки к западу от храма, рикши выкатывают повозки, кофейни-кисса открываются для местных. Завтрак в одной из них."},
+ {t:"09:30",n:"Курамаэ",jp:"蔵前",ll:[35.7035,139.7920],k:"quiet",d:"Тихий район мастерских у реки, прямо к югу от отеля: кожа, блокноты, кофе. Без толп и вывесок на английском."},
+ {t:"11:00",n:"Сад Кю-Ясуда",jp:"旧安田庭園",ll:[35.6978,139.7962],k:"quiet",d:"Маленький бесплатный сад у реки рядом с залом сумо. Пруд, карпы, мало кто знает."},
+ {t:"11:30",n:"Музей Хокусая",jp:"すみだ北斎美術館",ll:[35.6960,139.8010],k:"sight",d:"Небольшой современный музей автора «Большой волны». Людей немного, по понедельникам закрыт."},
+ {t:"13:00",n:"Обед: тянко-набэ",jp:"両国 ちゃんこ",mq:"両国 ちゃんこ鍋",ll:[35.6965,139.7930],k:"food",d:"Сытное рагу, которым кормят борцов сумо, часто в ресторанах бывших борцов. Ноябрьский турнир идёт в Фукуоке, но район всё равно живёт сумо: школы-хэя, борцы в юкатах на улицах."},
+ {t:"15:00",n:"Киёсуми-Сиракава",jp:"清澄庭園",ll:[35.6812,139.7990],k:"quiet",d:"Сад Киёсуми с камнями-ступеньками через пруд и кофейни в старых складах вокруг. В будни почти пусто."},
+ {t:"17:00",n:"Beer Club Popeye",jp:"麦酒倶楽部ポパイ",ll:[35.6955,139.7945],k:"bar",d:"Легендарный крафтовый бар Токио с 1985 года, больше 70 кранов. На хэппи-ауэре к пиву, отмеченному короной, приносят бесплатную закуску. Порции меньше пинты — можно попробовать много.",q:"Семьдесят кранов! Это не бар. Это армия. И я её сёгун.",tip:"Возьмите дегустационный сет. Обратно до отеля — 2 станции."}
+ ]},
+{d:18,dow:"Ср",city:"Токио",h:"tokyo",title:"Янака: Токио, который уцелел",
+ legend:"Кошки Янаки признают во мне старшего. Мы оба спим днём, охотимся ночью и делаем вид, что так задумано.",
+ stops:[
+ {t:"10:00",n:"Кладбище Янака",jp:"谷中霊園",ll:[35.7228,139.7695],k:"quiet",d:"Старое кладбище-парк с аллеями деревьев и кошками на надгробиях. Одно из самых спокойных мест Токио. От станции Ниппори."},
+ {t:"10:45",n:"Юяке-дандан и Янака Гиндза",jp:"谷中ぎんざ",ll:[35.7275,139.7660],k:"food",d:"Короткая торговая улица середины прошлого века. Перекусы на ходу: менчи-кацу, крокеты. Начните сверху, со «ступеней заката». В среду часть лавок закрыта, но улица живая."},
+ {t:"11:40",n:"Галерея в старой бане SCAI",jp:"SCAI THE BATHHOUSE",ll:[35.7212,139.7712],k:"quiet",d:"Современное искусство в бане 200-летней давности. Вокруг — лучшие улочки Янаки: деревянные дома, храмы, мастерские. Петляйте без цели."},
+ {t:"13:00",n:"Святилище Нэдзу",jp:"根津神社",ll:[35.7200,139.7605],k:"quiet",d:"Тоннель из красных ворот, как в Инари, только в миниатюре и почти без людей. В Нэдзу и Сэндаги — маленькие лавки соба на обед."},
+ {t:"14:45",n:"Пруд Синобадзу",jp:"不忍池",ll:[35.7125,139.7710],k:"sight",d:"Пруд в парке Уэно с храмом Бэнтэн на острове, утки, лодки."},
+ {t:"16:30",n:"Рынок Амэ-Ёко",jp:"アメ横",ll:[35.7100,139.7745],k:"sight",d:"Шумный рынок под эстакадой: рыба, сладости, специи, кроссовки."},
+ {t:"18:00",n:"Бары под путями Уэно — Окатимати",jp:"上野 ガード下",ll:[35.7085,139.7740],k:"bar",d:"Стоячие бары и идзакаи под железной дорогой. Поезд грохочет над головой, пиво дешёвое, закуски по 200–400 ¥. Здесь родилось слово «сэнбэро» — напиться на тысячу иен.",q:"Сэнбэро — мой боевой стиль. Тысяча иен на входе, легенда на выходе."}
+ ]},
+{d:19,dow:"Чт",city:"Токио",h:"tokyo",title:"Кошачий храм, трамвай и треугольник баров",
+ legend:"В храме кошек я приказал пиву кончаться медленнее. Пока подчиняется. Кошка кивнула. Или это была третья кружка.",
+ stops:[
+ {t:"07:30",n:"Мэйдзи-дзингу",jp:"明治神宮",ll:[35.6764,139.6993],k:"sight",d:"Лес посреди мегаполиса. Утром тихо и пахнет хвоей. Открывается с рассветом."},
+ {t:"09:00",n:"Ура-Харадзюку",jp:"裏原宿",ll:[35.6705,139.7065],k:"quiet",d:"Задворки Харадзюку и Кэт-стрит: маленькие бутики, кофейни, жилые улочки. Такэсита-дори пропускаем."},
+ {t:"11:00",n:"Храм Готокудзи",jp:"豪徳寺",ll:[35.6488,139.6475],k:"quiet",d:"Храм, где родился манэки-нэко — кот с поднятой лапой. Тысячи белых котиков на полках, а в резьбе пагоды спрятаны кошки."},
+ {t:"12:00",n:"Трамвай Сэтагая-сэн",jp:"宮の坂駅",ll:[35.6475,139.6530],k:"move",d:"Маленький двухвагонный трамвай через жилые кварталы, от остановки Мияносака."},
+ {t:"12:30",n:"Святилище Сёин",jp:"松陰神社",ll:[35.6455,139.6625],k:"quiet",d:"Тихое святилище учёного XIX века и рядом маленькая улица с пекарнями и кофейнями для местных."},
+ {t:"14:15",n:"Симокитадзава",jp:"下北沢",ll:[35.6615,139.6680],k:"quiet",d:"Секонд-хенды, виниловые лавки, маленькие театры. Новая зелёная зона на месте старых путей."},
+ {t:"18:00",n:"Сангэндзяя: Санкаку-тидай",jp:"三軒茶屋 三角地帯",ll:[35.6435,139.6705],k:"bar",d:"«Треугольник» переулков: бары на пять мест, якитори, гёдза, старые идзакаи. Сюда ходят местные, а не туристы.",tip:"Заглядывайте внутрь: машут рукой — заходите."}
+ ]},
+{d:20,dow:"Пт",city:"Токио",h:"tokyo",title:"Китидзёдзи и ночной Синдзюку",
+ legend:"В Голден Гай я взял штурмом двести баров за одну ночь. Ну, три. Но очень яростно.",
+ stops:[
+ {t:"09:30",n:"Парк Инокасира",jp:"井の頭恩賜公園",ll:[35.6997,139.5735],k:"quiet",d:"Пруд с лодками в листве, в ноябре клёны. Утром здесь гуляют с собаками местные, а не туристы."},
+ {t:"11:00",n:"Хармоника Ёкотё",jp:"ハモニカ横丁",ll:[35.7036,139.5790],k:"food",d:"Лабиринт крошечных лавок и баров у станции Китидзёдзи. Днём — пирожки, менчи-кацу, первое пиво."},
+ {t:"13:30",n:"Сад Синдзюку-гёэн",jp:"新宿御苑",ll:[35.6852,139.7101],k:"quiet",d:"Огромный сад: японский, английский и французский. В ноябре — клёны и хризантемы. Закрывается около 16:30."},
+ {t:"16:15",n:"Бесплатная смотровая мэрии",jp:"東京都庁 展望室",ll:[35.6896,139.6917],k:"sight",d:"45-й этаж, вход бесплатный. На закате в ясную погоду видно Фудзи — там вы были в понедельник."},
+ {t:"18:00",n:"Омоидэ Ёкотё",jp:"思い出横丁",ll:[35.6930,139.6995],k:"bar",d:"Дым от якитори, бары на шесть мест, стойки впритык. Туристов много, но в барах подальше от входа сидят свои.",tip:"Берите моцу-яки — шашлычки из потрохов."},
+ {t:"20:30",n:"Голден Гай",jp:"新宿ゴールデン街",ll:[35.6940,139.7046],k:"bar",d:"Около двухсот микробаров на шести переулках. Во многих плата за место, она написана у двери. У каждого бара свой характер: панк, кино, джаз, хоррор. В пятницу людно — пробуйте бары на вторых этажах."}
+ ]},
+{d:21,dow:"Сб",city:"Токио",h:"tokyo",title:"Сибамата и последний бой",
+ legend:"В Сибамате время остановилось. Я тоже остановился. В баре. Время пошло дальше, а я нет.",
+ stops:[
+ {t:"10:00",n:"Улица Тайсякутэн-сандо",jp:"柴又帝釈天参道",ll:[35.7585,139.8765],k:"food",d:"Улица середины прошлого века на окраине Токио: лепёшки кусамоти с полынью, сэмбэй жарят на углях у входа. Иностранцы сюда почти не доезжают. От отеля около 40 минут."},
+ {t:"10:30",n:"Храм Тайсякутэн",jp:"柴又帝釈天",ll:[35.7590,139.8775],k:"sight",d:"Стены главного зала покрыты невероятно тонкой деревянной резьбой. Платная галерея с резьбой и сад с крытой верандой — обязательно."},
+ {t:"11:30",n:"Переправа Ягири",jp:"矢切の渡し",ll:[35.7618,139.8850],k:"quiet",d:"Последняя лодочная переправа Токио через реку Эдо: лодочник, весло, пять минут. По выходным ходит надёжнее, чем в будни."},
+ {t:"13:00",n:"Обед: угорь на рисе",jp:"柴又 うなぎ",mq:"柴又 うなぎ 川千家",ll:[35.7583,139.8770],k:"food",d:"Унаги — местная гордость, здесь угря готовят больше ста лет."},
+ {t:"15:00",n:"Фукагава Фудо-до",jp:"深川不動堂",ll:[35.6718,139.7973],k:"sight",d:"Храм в Монзэн-Накатё, стена которого покрыта санскритскими знаками. Внутри проходит огненная церемония гома с барабанами, обычно несколько раз в день — расписание у входа. Самое мощное зрелище поездки."},
+ {t:"16:30",n:"Томиока Хатимангу",jp:"富岡八幡宮",ll:[35.6713,139.7990],k:"quiet",d:"Святилище с огромными паланкинами-микоси и памятником великим борцам сумо. Тихий старый Токио."},
+ {t:"18:00",n:"Тацуми Синмити",jp:"辰巳新道",ll:[35.6720,139.7965],k:"bar",d:"Узкий переулок закусочных и баров у станции Монзэн-Накатё, выживший с послевоенных времён. Хозяйки за стойкой, местные старики. Лучшего места для прощального вечера не найти.",q:"Последний кампай не бывает последним. Он просто предпоследний перед следующей поездкой."}
+ ]},
+{d:22,dow:"Вс",city:"Токио",h:null,title:"Прощальное утро и домой",
+ legend:"Самурай не прощается. Самурай кричит «ещё по одной» и опаздывает на самолёт. Не будьте как самурай. Будьте как я в рассказах.",
+ stops:[
+ {t:"08:00",n:"Сэнсо-дзи и Накамисэ",jp:"浅草寺 仲見世",mq:"仲見世通り",ll:[35.7135,139.7965],k:"sight",d:"Последний утренний круг: лавки Накамисэ открываются около 9–10. Сувениры: сладости нингё-яки, веера, палочки."},
+ {t:"09:00",n:"Завтрак у реки",jp:"隅田公園",ll:[35.7110,139.7990],k:"food",d:"Кофе и онигири у Сумиды напоследок."},
+ {t:"10:30",n:"Забрать вещи и в аэропорт",hotel:"tokyo",k:"hotel",d:"От станции Асакуса прямые поезда: в Нариту около часа, в Ханэду около 45 минут. Будьте в аэропорту за 2,5 часа до вылета."}
+ ]}
+];
+
+/* ---------- utils ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function km(a,b){const R=6371,r=Math.PI/180;const dl=(b[0]-a[0])*r,dn=(b[1]-a[1])*r;
+  const h=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h));}
+function fmtKm(x){return x<1?Math.round(x*1000/50)*50+" м":x.toFixed(1).replace(".",",")+" км"}
+DAYS.forEach(d=>d.stops.forEach(s=>{if(s.hotel){const H=HOTELS[s.hotel];s.n=s.n+" · "+H.n;s.jp=H.jp;s.mq=H.mq;s.ll=H.ll}}));
+function gq(s){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.mq||s.jp)}
+function gdir(ll,mode){return "https://www.google.com/maps/dir/?api=1&destination="+ll[0]+","+ll[1]+"&travelmode="+mode}
+let DONE={};try{DONE=JSON.parse(localStorage.getItem("wp-done-v2")||"{}")||{}}catch(e){DONE={}}
+function saveDone(){try{localStorage.setItem("wp-done-v2",JSON.stringify(DONE))}catch(e){}}
+let cur=0,active=-1;
+const SEAL=["一","二","三","四","五","六","七","八","九","十","十一","十二","十三","十四","十五"];
+
+/* ---------- overview ---------- */
+const CITIES=[
+ {n:"Осака",ll:[34.6937,135.5023],nights:"3 ночи",dates:"8–11 нояб",h:"osaka",dy:-1},
+ {n:"Нара",ll:[34.6851,135.8048],nights:"на день",dates:"9 нояб",dy:1},
+ {n:"Киото",ll:[35.0116,135.7681],nights:"3 ночи",dates:"11–14 нояб",h:"kyoto",dy:-1},
+ {n:"Кавагутико",ll:[35.5170,138.7516],nights:"2 ночи",dates:"14–16 нояб",h:"kawa",dy:-1},
+ {n:"Токио",ll:[35.6812,139.7671],nights:"6 ночей",dates:"16–22 нояб",h:"tokyo",dy:1}
+];
+function drawOverview(){
+  const W=640,H=300,p=54;const k=Math.cos(35.2*Math.PI/180);
+  const xs=CITIES.map(c=>c.ll[1]*k),ys=CITIES.map(c=>c.ll[0]);
+  const mnx=Math.min(...xs),mxx=Math.max(...xs),mny=Math.min(...ys),mxy=Math.max(...ys);
+  const sc=Math.min((W-2*p)/(mxx-mnx),(H-2*p)/(mxy-mny));
+  const ox=(W-(mxx-mnx)*sc)/2,oy=(H-(mxy-mny)*sc)/2;
+  const P=ll=>[ox+(ll[1]*k-mnx)*sc, oy+(mxy-ll[0])*sc];
+  const order=[0,1,0,2,3,4];
+  let d="";order.forEach((i,j)=>{const [x,y]=P(CITIES[i].ll);d+=(j?"L":"M")+x.toFixed(1)+" "+y.toFixed(1)});
+  const fj=P([35.3606,138.7274]);
+  let s=`<rect width="${W}" height="${H}" fill="var(--surface)"/>`;
+  s+=`<text x="${W-16}" y="${H-16}" text-anchor="end" style="fill:var(--red);opacity:.18;font:900 64px 'Hiragino Mincho ProN','Yu Mincho',serif">日本</text>`;
+  s+=`<g><path class="ov-fuji" d="M${fj[0]-36} ${fj[1]+18} L${fj[0]-8} ${fj[1]-17} L${fj[0]+8} ${fj[1]-17} L${fj[0]+36} ${fj[1]+18}z"/><path class="ov-cap" d="M${fj[0]-8} ${fj[1]-17} L${fj[0]+8} ${fj[1]-17} L${fj[0]+14} ${fj[1]-9} L${fj[0]+4} ${fj[1]-12} L${fj[0]-3} ${fj[1]-7} L${fj[0]-14} ${fj[1]-9}z"/><text x="${fj[0]}" y="${fj[1]+34}" text-anchor="middle" style="fill:var(--muted);font:500 11px var(--f-body)">Фудзи 3776 м</text></g>`;
+  s+=`<path class="ov-line" d="${d}"/>`;
+  const m1=P([(CITIES[2].ll[0]+CITIES[3].ll[0])/2,(CITIES[2].ll[1]+CITIES[3].ll[1])/2]);
+  s+=`<text x="${m1[0]}" y="${m1[1]-12}" text-anchor="middle" style="fill:var(--muted);font:500 11px var(--f-body)">~${Math.round(km(CITIES[2].ll,CITIES[3].ll))} км · синкансэн + автобус</text>`;
+  CITIES.forEach(c=>{const [x,y]=P(c.ll);const ty=c.dy<0?y-16:y+26;
+    s+=`<g class="ov-city"><circle cx="${x}" cy="${y}" r="7"/><text x="${x}" y="${ty}" text-anchor="middle">${c.n}</text><text class="sm" x="${x}" y="${ty+(c.dy<0?-15:15)}" text-anchor="middle">${c.nights}</text></g>`});
+  $("#ovMap").innerHTML=s;
+  $("#legs").innerHTML=CITIES.map(c=>`<div class="leg"><span class="dates">${c.dates}</span><b>${c.n}</b><span class="n">${c.nights}</span>${c.h?`<span class="h"><a href="${gq(HOTELS[c.h])}" target="_blank" rel="noopener">⌂ ${esc(HOTELS[c.h].n)} ↗</a></span>`:`<span class="h" style="color:var(--muted)">поездка на день из Осаки</span>`}</div>`).join("")+
+   `<div class="ov-sub">Прилёт 8 ноября в Кансай, вылет 22 ноября из Токио.</div>`;
+}
+
+/* ---------- tabs ---------- */
+function tokyoToday(){try{return new Date().toLocaleDateString("en-CA",{timeZone:"Asia/Tokyo"})}catch(e){return ""}}
+const TODAY=tokyoToday();
+function dayIndexToday(){const m=TODAY.match(/^2026-11-(\d\d)$/);if(!m)return -1;const n=+m[1];return DAYS.findIndex(d=>d.d===n)}
+function drawTabs(){
+  const ti=dayIndexToday();
+  $("#tabs").innerHTML=DAYS.map((d,i)=>`<button class="tab" role="tab" id="tab${i}" aria-selected="${i===cur}" data-i="${i}" type="button">${i===ti?'<span class="today">СЕГОДНЯ</span>':""}<span class="d">${d.d} · ${d.dow}</span><span class="c">${esc(d.city)}</span></button>`).join("");
+  $("#tabs").querySelectorAll(".tab").forEach(b=>b.onclick=()=>selectDay(+b.dataset.i,true));
+}
+
+/* ---------- day map ---------- */
+function niceStep(pxPerKm){for(const v of [.1,.2,.5,1,2,5,10,20,50]){if(v*pxPerKm>=70)return v}return 50}
+function drawMap(day,i){
+  const W=600,H=420,p=44;
+  const pts=day.stops.map((s,j)=>({s,j})).filter(o=>!o.s.skip);
+  if(!pts.length)return `<div style="padding:24px;color:var(--muted)">День переездов — карта не нужна.</div>`;
+  const hotel=day.h?HOTELS[day.h]:null;
+  const showHotel=hotel&&!pts.some(o=>o.s.hotel)&&pts.some(o=>km(o.s.ll,hotel.ll)<6);
+  const all=pts.map(o=>o.s.ll).concat(showHotel?[hotel.ll]:[]);
+  const mlat=all.reduce((a,l)=>a+l[0],0)/all.length;const k=Math.cos(mlat*Math.PI/180);
+  const xs=all.map(l=>l[1]*k),ys=all.map(l=>l[0]);
+  let mnx=Math.min(...xs),mxx=Math.max(...xs),mny=Math.min(...ys),mxy=Math.max(...ys);
+  const minSpan=.006;if(mxx-mnx<minSpan){const c=(mxx+mnx)/2;mnx=c-minSpan/2;mxx=c+minSpan/2}
+  if(mxy-mny<minSpan){const c=(mxy+mny)/2;mny=c-minSpan/2;mxy=c+minSpan/2}
+  const sc=Math.min((W-2*p)/(mxx-mnx),(H-2*p-20)/(mxy-mny));
+  const ox=(W-(mxx-mnx)*sc)/2,oy=(H-20-(mxy-mny)*sc)/2;
+  const P=ll=>[ox+(ll[1]*k-mnx)*sc, oy+(mxy-ll[0])*sc];
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Карта дня: ${pts.length} точек"><defs><pattern id="dots${i}" width="18" height="18" patternUnits="userSpaceOnUse"><circle class="m-dot" cx="2" cy="2" r="1.2"/></pattern></defs>`;
+  s+=`<rect class="m-bg" width="${W}" height="${H}"/><rect width="${W}" height="${H}" fill="url(#dots${i})"/>`;
+  if(showHotel){const [hx,hy]=P(hotel.ll),[ex,ey]=P(pts[pts.length-1].s.ll);s+=`<path class="m-hroute" d="M${ex.toFixed(1)} ${ey.toFixed(1)}L${hx.toFixed(1)} ${hy.toFixed(1)}"/>`}
+  s+=`<path class="m-route" d="${pts.map((o,j)=>{const [x,y]=P(o.s.ll);return (j?"L":"M")+x.toFixed(1)+" "+y.toFixed(1)}).join("")}"/>`;
+  if(showHotel){const [hx,hy]=P(hotel.ll);s+=`<g class="m-hotel"><rect x="${(hx-11).toFixed(1)}" y="${(hy-11).toFixed(1)}" width="22" height="22" rx="3"/><text x="${hx.toFixed(1)}" y="${hy.toFixed(1)}">⌂</text></g>`}
+  pts.forEach(o=>{const [x,y]=P(o.s.ll);const id=i+"-"+o.j;const cls=["m-mk",o.s.k,DONE[id]?"done":"",o.j===active?"active":""].join(" ");
+    const r=o.j===active?15:12;
+    const shape=o.s.k==="hotel"?`<rect x="${(x-r).toFixed(1)}" y="${(y-r).toFixed(1)}" width="${2*r}" height="${2*r}" rx="3"/>`:`<circle class="m-${o.s.k}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}"/>`;
+    s+=`<g class="${cls}" data-j="${o.j}" tabindex="0" role="button" aria-label="${o.j+1}. ${esc(o.s.n)}">${shape}<text x="${x.toFixed(1)}" y="${y.toFixed(1)}">${o.j+1}</text></g>`});
+  if(active>=0&&!day.stops[active].skip){const [x,y]=P(day.stops[active].ll);const left=x>W*0.62;
+    s+=`<text class="m-lbl" x="${(left?x-20:x+20).toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="${left?"end":"start"}">${esc(day.stops[active].n)}</text>`}
+  const pxPerKm=sc/111.32;const st=niceStep(pxPerKm);const L=st*pxPerKm;
+  s+=`<g class="m-scale"><line x1="20" y1="${H-22}" x2="${(20+L).toFixed(1)}" y2="${H-22}"/><line x1="20" y1="${H-27}" x2="20" y2="${H-17}"/><line x1="${(20+L).toFixed(1)}" y1="${H-27}" x2="${(20+L).toFixed(1)}" y2="${H-17}"/><text x="${(28+L).toFixed(1)}" y="${H-18}">${st<1?st*1000+" м":st+" км"}</text></g>`;
+  s+=`<g class="m-n"><path d="M${W-28} ${H-40} l7 18 l-7 -5 l-7 5z"/><text x="${W-28}" y="${H-46}" text-anchor="middle">С</text></g>`;
+  return s+"</svg>";
+}
+
+/* ---------- day ---------- */
+function selectDay(i,scroll){
+  cur=i;active=-1;
+  document.querySelectorAll(".tab").forEach((b,j)=>b.setAttribute("aria-selected",j===i));
+  const t=$("#tab"+i);if(t)t.scrollIntoView({block:"nearest",inline:"center",behavior:"smooth"});
+  renderDay();
+  $("#heroQuote").textContent=DAYS[i].legend;
+  if(scroll){const top=$("#day").getBoundingClientRect().top+scrollY-96;scrollTo({top,behavior:"smooth"})}
+}
+function renderDay(){
+  const day=DAYS[cur],i=cur;
+  const mapPts=day.stops.filter(s=>!s.skip);
+  const route=mapPts.length>1?"https://www.google.com/maps/dir/"+mapPts.slice(0,10).map(s=>s.ll[0]+","+s.ll[1]).join("/"):null;
+  const H=day.h?HOTELS[day.h]:null;
+  let list="";
+  day.stops.forEach((s,j)=>{
+    if(j>0){const prev=day.stops[j-1];const dk=km(prev.ll,s.ll);
+      if(!(prev.skip&&s.skip)){
+        let txt;if(dk<0.05)txt="рядом";else if(dk<2.6){const w=dk*1.3;txt=`${fmtKm(w)} · ~${Math.max(5,Math.round(w/4.5*60/5)*5)} мин пешком`}
+        else if(dk<40) txt=`${fmtKm(dk)} по прямой · транспорт`;else txt=`${Math.round(dk)} км · поезд/автобус`;
+        list+=`<div class="gap">${txt}</div>`}}
+    const id=i+"-"+j;
+    list+=`<article class="stop k-${s.k}${DONE[id]?" done":""}${j===active?" active":""}" id="s${j}">
+      <button class="num" type="button" data-j="${j}" aria-label="Показать на карте">${j+1}</button>
+      <div class="stop-body">
+        <div class="stop-top"><span class="time">${s.t}</span><span class="chip">${KIND[s.k]}</span>${s.skip?'<span class="chip off">вне карты дня</span>':""}</div>
+        <h3>${esc(s.n)}</h3>
+        <a class="jp" href="${gq(s)}" target="_blank" rel="noopener">${esc(s.jp)} ↗</a>
+        <p>${esc(s.d)}</p>
+        ${s.tip?`<div class="tip">${esc(s.tip)}</div>`:""}
+        ${s.q?`<div class="says"><b>Вэньпэй</b>${esc(s.q)}</div>`:""}
+        <div class="stop-actions">
+          <a class="sbtn" href="${gdir(s.ll,"transit")}" target="_blank" rel="noopener">Проложить маршрут</a>
+          <button class="sbtn${DONE[id]?" on":""}" type="button" data-done="${j}">${DONE[id]?"✓ Были тут":"Отметить: были"}</button>
+        </div>
+      </div></article>`;
+  });
+  $("#day").innerHTML=`
+   <div class="dayhead"><div class="dh-left"><div class="hanko" aria-hidden="true">第${SEAL[i]}<br>日</div><div><h2>${day.d} ноября · ${esc(day.title)}</h2>
+     <div class="meta">${day.dow} · ${esc(day.city)} · ${day.stops.length} точек${H?` · ночлег: <a href="${gq(H)}" target="_blank" rel="noopener">${esc(H.n)}</a>`:" · вылет"}</div></div></div>
+     ${route?`<a class="btn" href="${route}" target="_blank" rel="noopener">Весь день в Google Maps</a>`:""}</div>
+   <div class="daygrid">
+     <div class="mapcol">
+       <div class="mapbox" id="mapbox">${drawMap(day,i)}
+         <div class="maplegend"><span><i style="background:var(--bone)"></i>главное</span><span><i style="background:var(--moss)"></i>тихое</span><span><i style="background:var(--gold)"></i>еда</span><span><i style="background:var(--red)"></i>бар</span><span><i style="background:var(--muted)"></i>переезд</span><span><i class="sq"></i>отель</span></div></div>
+       <div class="legend-card"><svg viewBox="0 0 220 240" aria-hidden="true"><use href="#bear"/></svg><div><span class="lbl">Былина дня</span><p>${esc(day.legend)}</p></div></div>
+     </div>
+     <div class="stops">${list}</div>
+   </div>`;
+  bindDay();updateNext();
+}
+function bindDay(){
+  $("#day").querySelectorAll(".m-mk").forEach(g=>{const f=()=>focusStop(+g.dataset.j,true);g.onclick=f;g.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();f()}}});
+  $("#day").querySelectorAll(".num").forEach(b=>b.onclick=()=>focusStop(+b.dataset.j,false));
+  $("#day").querySelectorAll("[data-done]").forEach(b=>b.onclick=()=>{const id=cur+"-"+b.dataset.done;if(DONE[id])delete DONE[id];else DONE[id]=1;saveDone();
+    const y=scrollY;renderDay();scrollTo(0,y);if(DONE[id]&&Math.random()<.5)say()});
+}
+function focusStop(j,scroll){
+  active=j;const y=scrollY;renderDay();scrollTo(0,y);
+  if(scroll){const el=$("#s"+j);if(el)el.scrollIntoView({behavior:"smooth",block:"center"})}
+  else if(innerWidth<=860){$("#mapbox").scrollIntoView({behavior:"smooth",block:"start"})}
+}
+function updateNext(){
+  const day=DAYS[cur];const j=day.stops.findIndex((s,k)=>!DONE[cur+"-"+k]);const a=$("#nextA");
+  if(j<0){
+    const H=day.h?HOTELS[day.h]:null;
+    const last=day.stops[day.stops.length-1];
+    if(H&&!last.hotel&&!a.dataset.home){$("#nextL").textContent="Бой окончен · отступаем";$("#nextT").textContent="⌂ "+H.n;a.textContent="В отель →";a.href=gdir(H.ll,"transit");a.target="_blank";a.onclick=null;return}
+    $("#nextL").textContent=`${day.d} ноября пройден`;$("#nextT").textContent=cur<DAYS.length-1?"Завтра: "+DAYS[cur+1].title:"Домой, герои";
+    a.textContent=cur<DAYS.length-1?"Следующий день →":"Былина →";a.removeAttribute("target");a.href="#";
+    a.onclick=e=>{e.preventDefault();if(cur<DAYS.length-1)selectDay(cur+1,true);else say()};return}
+  const s=day.stops[j];const prev=j>0?day.stops[j-1]:null;const mode=prev&&km(prev.ll,s.ll)<2.6?"walking":"transit";
+  $("#nextL").textContent=`Дальше · ${day.d} нояб · №${j+1} · ${s.t}`;$("#nextT").textContent=s.n;
+  a.textContent=mode==="walking"?"Пешком →":"Маршрут →";a.href=gdir(s.ll,mode);a.target="_blank";a.onclick=null;
+}
+
+/* ---------- bear ---------- */
+let lastQ=-1,tTimer;
+function rq(){let q;do{q=Math.floor(Math.random()*QUOTES.length)}while(q===lastQ);lastQ=q;return QUOTES[q]}
+function say(){const t=$("#toast");$("#toastQ").textContent=rq();t.hidden=false;t.style.animation="none";void t.offsetWidth;t.style.animation="";
+  clearTimeout(tTimer);tTimer=setTimeout(()=>t.hidden=true,7000)}
+$("#bearBtn").onclick=say;$("#toast").onclick=()=>$("#toast").hidden=true;
+$("#moreQuote").onclick=()=>{$("#heroQuote").textContent=rq()};
+$("#goToday").onclick=()=>{const ti=dayIndexToday();selectDay(ti>=0?ti:cur,true);if(ti<0)say()};
+
+/* ---------- init ---------- */
+drawOverview();
+const hm=(location.hash||"").match(/^#d(\d+)$/);
+const ti=dayIndexToday();
+cur=hm?Math.min(DAYS.length-1,Math.max(0,+hm[1]-1)):(ti>=0?ti:0);
+drawTabs();selectDay(cur,false);
+if(ti<0){$("#goToday").textContent="Начать с 8 ноября"}
+setTimeout(()=>{if(!document.hidden)say()},4000);
+</script>
+</body>
+</html>
